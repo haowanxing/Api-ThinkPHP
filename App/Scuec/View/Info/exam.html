@@ -8,7 +8,7 @@
 <div class="container">
   <h3>考试安排查询API</h3>
   <div class="row">
-    <form method="get" action="">
+    <form method="POST" action="">
       <div class="col-md-5">
         <div class="form-group">
           <label for="student1">账号:</label>
@@ -34,7 +34,7 @@
         <ol>
           <li>中南民族大学学生考试安排信息 Json格式</li>
           <li>如学号密码输入错误或不存在安排信息则返回 '获取网页错误!请检查配置.'</li>
-          <li>API调用方式:当前URL+请求参数
+          <li>API调用方式:POST
             <small>(示例见提交后的url)</small>
           </li>
         </ol>
