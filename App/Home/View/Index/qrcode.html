@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <include file="./Public/Tpl/head.html" title="二维码生成" description="将指定文字内容(代码)生成对应的二维码图片(可以右键另存为),可根据需要选择二维码的大小和纠错级" keywords="二维码,制作,生成,API,Fantwo"/>
+  <script>
+    function gen() {
+      document.getElementById('show').src = "http://api.fantwo.com/png/qrcode.png?data=" + document.getElementById('tword').value + "&size=" + document.getElementById('tsize').value + "&level=" + document.getElementById('tlevel').value;
+    }
+  </script>
+</head>
+<body>
+<include file="./Public/Tpl/nav.html"/>
+<div class="container">
+  <h3>二维码API</h3>
+  <div class="row">
+    <div class="col-md-5">
+      <div class="form-group">
+        <label class="col-md-2 control-label" for="tsize">尺寸:</label>
+        <div class="col-md-4">
+          <select id="tsize" class="form-control">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10" selected>10</option>
+          </select>
+        </div>
+        <label class="col-md-2 control-label" for="tlevel">等级:</label>
+        <div class="col-md-4">
+          <select id="tlevel" class="form-control">
+            <option value="L">低</option>
+            <option value="M">中</option>
+            <option value="Q" selected>普通</option>
+            <option value="H">高</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-md-2 control-label" for="tword">内容:</label>
+        <div class="col-md-12">
+                <textarea name="qrcode" id="tword" class="form-control" rows="10"
+                          placeholder="二维码所包含的内容,网址,电话等信息"></textarea>
+        </div>
+      </div>
+      <button type="button" class="btn btn-primary" onclick="javascript:gen()">生成二维码</button>
+    </div>
+
+    <div class="col-md-offset-0 col-md-2">
+    </div>
+
+    <div class="col-md-5">
+      <div class="panel panel-default">
+        <div class="panel-heading">生成结果:(右键另存为)</div>
+        <div class="panel-body">
+          <img src="http://api.fantwo.com/png/qrcode.png?data=fantwo&size=10&level=H" class="img-responsive" id="show"
+               alt="qrcode">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+  </div>
+  <hr>
+  <div class="row">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">功能介绍</h3>
+      </div>
+      <div class="panel-body">
+        <ol>
+          <li>生成指定内容(data)的二维码图像</li>
+          <li>可以选定生成二维码的纠错级(level),大小(size)</li>
+          <li>API调用方式:图片URL+请求参数
+            <small>(示例见生成的二维码图片url地址)</small>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<include file="./Public/Tpl/footer.html"/>
+</body>
+</html>

@@ -1,0 +1,11 @@
+[ 2016-04-18T13:36:17+08:00 ] ::1 /PhpstormProjects/thinkproject/index.php
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000200s ]
+INFO: [ app_init ] --END-- [ RunTime:0.004846s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.002058s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.002179s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000871s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001003s ]
+

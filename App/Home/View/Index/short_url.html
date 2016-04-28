@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <include file="./Public/Tpl/head.html" title="新浪短链接生成与还原" description="t.cn短链接复原和长连接缩短成短链接t.cn" keywords="短链接,长链接,新浪链接,API,Fantwo"/>
+</head>
+<body>
+<include file="./Public/Tpl/nav.html"/>
+<div class="container">
+  <h3>新浪短链接生成与还原API</h3>
+  <div class="row">
+    <form method="post" action="" name="shorturl_form">
+      <input type="hidden" name="type" id="hidden_type" value="1"/>
+      <div class="col-md-5">
+        <div class="form-group">
+          <label for="turl">您准备处理的网址:</label>
+          <input name="url" id="turl" class="form-control" type="text" placeholder="http://www.fantwo.com"/><br>
+        </div>
+        <button type="button" onclick="do_post(1)" class="btn btn-primary">生成</button>
+        <button type="button" onclick="do_post(2)" class="btn btn-success">还原</button>
+      </div>
+    </form>
+    <div class="col-md-offset-0 col-md-2"></div>
+    <div class="col-md-5">
+      <div class="panel panel-default">
+        <div class="panel-heading">查询结果:{$tips}</div>
+        <div class="panel-body">
+          <p>短链接:<a target="_blank" href="{$result['url_short']}">{$result['url_short']}</a></p>
+          <p>原始网址:<a target="_blank" href="{$result['url_long']}">{$result['url_long']}</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">功能介绍</h3>
+      </div>
+      <div class="panel-body">
+        <ol>
+          <li>原网址与短链接相互转换,返回json数据</li>
+          <li>type=1:原->短 | type=2:短->原</li>
+          <li>API调用方式:<span>
+            <php>echo "http://".I('server.SERVER_NAME').explode('?',I('server.REQUEST_URI'))[0];</php>?qq=你的QQ号&type=1&url=链接</span>
+            <small>(仅支持post请求)</small>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<include file="./Public/Tpl/footer.html"/>
+<script type="text/javascript">
+  function do_post(d) {
+    document.getElementById('hidden_type').value = d;
+    document.shorturl_form.submit();
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <include file="./Public/Tpl/head.html" title="本学期课程查询API" description="中南民族大学学生当前学期选课结果,提供给学生实时查询选课结果信息." keywords="中南民族大学,学生选课,选课结果,课表,API,Fantwo"/>
+</head>
+<body>
+<include file="./Public/Tpl/nav.html"/>
+<div class="container">
+  <h3>本学期课程查询API</h3>
+  <div class="row">
+    <form method="get" action="">
+      <div class="col-md-5">
+        <div class="form-group">
+          <label for="student1">账号:</label>
+          <input name="student" id="student1" class="form-control" type="text" placeholder="学号"/><br>
+        </div>
+        <div class="form-group">
+          <label for="password1">密码:</label>
+          <input name="password" id="password1" class="form-control" type="password" placeholder="Password"/>
+        </div>
+      </div>
+      <div class="col-md-offset-4 col-md-8">
+        <button type="submit" class="btn btn-default">提交</button>
+      </div>
+    </form>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">功能介绍</h3>
+      </div>
+      <div class="panel-body">
+        <ol>
+          <li>中南民族大学学生当前学期选课结果 Json格式</li>
+          <li>如学号密码输入错误或不存在安排信息则返回 '获取网页错误!请检查配置.'</li>
+          <li>API调用方式:当前URL+请求参数
+            <small>(示例见提交后的url)</small>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<include file="./Public/Tpl/footer.html"/>
+</body>
+</html>

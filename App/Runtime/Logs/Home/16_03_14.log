@@ -1,0 +1,22 @@
+[ 2016-03-14T21:38:45+08:00 ] ::1 /phpstormprojects/thinkproject/Home/index/weather.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000038s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000872s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001060s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001230s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000085s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000202s ]
+NOTIC: [8] Undefined variable: tips /Users/anthony/Sites/PhpstormProjects/thinkproject/App/Runtime/Cache/Home/f5cf1fcb3d7697e2fdac88db4d55f201.php 第 100 行.
+NOTIC: [8] Undefined variable: result /Users/anthony/Sites/PhpstormProjects/thinkproject/App/Runtime/Cache/Home/f5cf1fcb3d7697e2fdac88db4d55f201.php 第 102 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.016644s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.016815s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000515s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000615s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000942s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001071s ]
+
