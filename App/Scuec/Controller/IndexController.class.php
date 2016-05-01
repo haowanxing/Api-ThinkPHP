@@ -54,7 +54,7 @@ class IndexController extends Controller
             $result[$k]['title'] = $matchlist[1][$k];
             $result[$k]['date'] = $matchlist[2][$k];
             $result[$k]['intro'] = $matchlist[3][$k];
-            $result[$k]['url'] = 'http://www.scuec.edu.cn'.$matchlist[0][$k];
+            $result[$k]['url'] = 'http://news.scuec.edu.cn/xww/?'.$matchlist[0][$k];
         }
         $this->ajaxReturn($result,'json');
     }
