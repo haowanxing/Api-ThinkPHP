@@ -51,7 +51,7 @@ class IndexController extends Controller
         array_shift($matchlist);           //$matchlist[0]为url [1]为标题 [2]为日期 [3]为简介
         $result = array();
         foreach($matchlist[0] as $k=>$v){
-            $result[$k]['title'] = $matchlist[1][$k];
+            $result[$k]['title'] = str_replace('&nbsp;',' ',$matchlist[1][$k]);
             $result[$k]['date'] = $matchlist[2][$k];
             $result[$k]['intro'] = $matchlist[3][$k];
             $result[$k]['url'] = 'http://news.scuec.edu.cn/xww/?'.$matchlist[0][$k];
