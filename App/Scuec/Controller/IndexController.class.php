@@ -24,7 +24,7 @@ class IndexController extends Controller
             $result[$k]['date'] = $matchlist[2][$k];
             $result[$k]['url'] = 'http://www.scuec.edu.cn'.$matchlist[0][$k];
         }
-        $this->ajaxReturn($result,'json');
+        $this->ajaxReturn(array('code'=>200,'result'=>$result),'json');
     }
     public function getMsgJiKe(){
         $url = "http://www.scuec.edu.cn/s/48/t/57/p/9/list.htm";
@@ -38,7 +38,7 @@ class IndexController extends Controller
             $result[$k]['date'] = $matchlist[2][$k];
             $result[$k]['url'] = 'http://www.scuec.edu.cn'.$matchlist[0][$k];
         }
-        $this->ajaxReturn($result,'json');
+        $this->ajaxReturn(array('code'=>200,'result'=>$result),'json');
     }
 
     public function getMsgMinDa(){
@@ -56,7 +56,7 @@ class IndexController extends Controller
             $result[$k]['intro'] = $matchlist[3][$k];
             $result[$k]['url'] = 'http://news.scuec.edu.cn/xww/?'.$matchlist[0][$k];
         }
-        $this->ajaxReturn($result,'json');
+        $this->ajaxReturn(array('code'=>200,'result'=>$result),'json');
     }
     public function _empty()
     {
