@@ -54,7 +54,7 @@ class InfoController extends Controller
                     $classinfo[$key][5] = $ch;
                 }
             }
-            $this->showapi($classinfo);
+            $this->showapi(array('code'=>200,'result'=>$classinfo));
         } else {
             $this->display();
         }
@@ -85,7 +85,7 @@ class InfoController extends Controller
                 }
                 $examinfo[$item][$key % 12] = preg_replace('/<\/*span.*>/s', '', $value);
             }
-            $this->showapi($examinfo);
+            $this->showapi(array('code'=>200,'result'=>$examinfo));
         } else {
             $this->display();
         }
@@ -144,7 +144,7 @@ class InfoController extends Controller
                 $score[$k][$i] = $value;
                 $i++;
             }
-            $this->showapi($score);
+            $this->showapi(array('code'=>200,'result'=>$score));
         } else {
             $this->display();
         }
@@ -185,7 +185,7 @@ class InfoController extends Controller
                 $score[$k][$i] = $value;
                 $i++;
             }
-            $this->showapi($score);
+            $this->showapi(array('code'=>200,'result'=>$score));
         } else {
             $this->display();
         }
@@ -229,7 +229,7 @@ class InfoController extends Controller
                 }
             }
 //            $this->showapi($resultArr);
-            $this->ajaxReturn($resultArr,'json');
+            $this->ajaxReturn(array('code'=>200,'result'=>$resultArr),'json');
         } else {
             $this->display();
         }
