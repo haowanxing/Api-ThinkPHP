@@ -192,8 +192,8 @@ class InfoController extends Controller
     }
 
     public function physics(){
-        $student = I('get.student', '');
-        $password = I('get.password', '');
+        $student = I('post.student', '');
+        $password = I('post.password', '');
         if ($student != '' && $password != '') {
             $url = 'http://labsystem.scuec.edu.cn/login.php';
             $targeturl = 'http://labsystem.scuec.edu.cn/labcoursearrange2_student.php';
@@ -205,6 +205,9 @@ class InfoController extends Controller
             $curl->setCookieFile($cookieFile);
             $curl->post($url,$data);
             $content = iconv('GB2312','UTF-8//IGNORE',$curl->get($targeturl,array('labcourse'=>'DXXY-387')));
+            if(strpos($content,"您无权访问此页面")!==false){
+                $this->ajaxReturn(array('code'=>400,'msg'=>'信息有误,或权限不足,请检查核对后重试'));
+            }
             if(file_exists($cookieFile)){
                 @unlink($cookieFile);
             }
@@ -228,7 +231,7 @@ class InfoController extends Controller
 //            $this->showapi($resultArr);
             $this->ajaxReturn($resultArr,'json');
         } else {
-//            $this->display();
+            $this->display();
         }
     }
 
