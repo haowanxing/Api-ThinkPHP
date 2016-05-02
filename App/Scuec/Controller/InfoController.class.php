@@ -191,6 +191,47 @@ class InfoController extends Controller
         }
     }
 
+    public function physics(){
+        $student = I('get.student', '');
+        $password = I('get.password', '');
+        if ($student != '' && $password != '') {
+            $url = 'http://labsystem.scuec.edu.cn/login.php';
+            $targeturl = 'http://labsystem.scuec.edu.cn/labcoursearrange2_student.php';
+            $data = array('myid'=>$student,'mypasswd'=>$password,'mytype'=>'student');
+            import("ORG.Curl.Curl");
+            $curl = new \Org\Curl\Curl();
+            $cookieFile = './App/Runtime/Temp/cookie-'.$student.'.temp';
+            $curl->setCookieJar($cookieFile);
+            $curl->setCookieFile($cookieFile);
+            $curl->post($url,$data);
+            $content = iconv('GB2312','UTF-8//IGNORE',$curl->get($targeturl,array('labcourse'=>'DXXY-387')));
+            if(file_exists($cookieFile)){
+                @unlink($cookieFile);
+            }
+            $pattern = '/<tr bgcolor=.*?>(.*?)<\/tr>/s';
+            preg_match_all($pattern,$content,$matchlist);
+            $matchlist = $matchlist[1];
+            $resultArr = array();
+            $pattern = '/<td.*?>(.*?)<\/td>/s';
+            foreach ($matchlist as $k => $v) {
+                if(strpos($v,'&nbsp;')==false){
+                    preg_match_all($pattern,$v,$mch);
+                    foreach($mch[1] as $mk=>$mv){
+                        if(strpos($mv,"必做")!==false || strpos($mv,"选做")!==false || strpos($mv,'<input')!==false) {
+                            unset($mch[1][$mk]);
+                        }
+                    }
+                    $mch[1] = array_values($mch[1]);
+                    $resultArr[] = $mch[1];
+                }
+            }
+//            $this->showapi($resultArr);
+            $this->ajaxReturn($resultArr,'json');
+        } else {
+//            $this->display();
+        }
+    }
+
     public function _empty()
     {
         $this->error('你是怎么找到我的!');
