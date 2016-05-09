@@ -151,13 +151,13 @@ class IndexController extends Controller
     $content = file_get_contents($requesturl);
     $response = json_decode($content, true);
     if (!empty($response)) {
-      if (!is_numeric(I("post.qq")) || strlen(I("post.qq")) < 4 || strlen(I("post.qq")) > 10) {
-        $this->show("{error:QQ号不合法!,qq:".I("post.qq")."}");
-        exit(0);
-      } else {
-        echo $content;
-        exit(0);
-      }
+      if(I('post.qq'))
+        if (!is_numeric(I("post.qq")) || strlen(I("post.qq")) < 4 || strlen(I("post.qq")) > 10) {
+          $this->show("{error:QQ号不合法!,qq:".I("post.qq")."}");
+          exit(0);
+        } else {
+          $this->ajaxReturn($response,'json');
+        }
       if ($response['urls'][0]['result']) {
         $this->assign("result", $response['urls'][0]);
       } else {
