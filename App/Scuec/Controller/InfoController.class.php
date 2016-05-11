@@ -33,7 +33,7 @@ class InfoController extends Controller
             $scuec->run();
             $content = $scuec->getContent();
             if ($content["code"] != 200) {
-                echo "获取网页错误!请检查配置.";
+                $this->showapi(array('code'=>400,'result'=>''));
                 exit(0);
             }
             $res = Array();
@@ -45,9 +45,10 @@ class InfoController extends Controller
                 if ($key % 10 == 0) {
                     $item++;
                 }
-                $classinfo[$item][$key % 10] = $value;
+                $classinfo[$item][$key % 10] = str_replace('<br/>',' ',$value);
             }
-            if (isset($_GET['type']) && $_GET['type'] == 1) {
+            //如果type=1,则分开上课时间字符串
+            if (isset($_POST['type']) && $_POST['type'] == 1) {
                 foreach ($classinfo as $key => $item) {
                     if ($key == 0) continue;
                     $ch = explode(" ", $item[5]);
