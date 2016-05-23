@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <include file="./Public/Tpl/head.html" title="机票价格日历(近一个月)" description="通过此接口查询可以迅速获取到近一个月的制定航线的价格日历" keywords="机票,航线,日历,API"/>
+</head>
+<body>
+<include file="./Public/Tpl/nav.html"/>
+<div class="container">
+  <h3>机票价格日历API</h3>
+  <div class="row">
+    <form method="get" action="">
+      <div class="col-md-5">
+        <div class="form-group">
+          <label for="tfrom">出发城市:</label>
+          <input name="from" id="tfrom" class="form-control" type="text" placeholder="起飞城市"/><br>
+        </div>
+        <div class="form-group">
+          <label for="tto">到达城市:</label>
+          <input name="to" id="tto" class="form-control" type="text" placeholder="降落城市"/><br>
+        </div>
+        <button type="submit" class="btn btn-default">提交</button>
+      </div>
+    </form>
+    <div class="col-md-offset-0 col-md-2"></div>
+    <div class="col-md-5">
+      <div class="panel panel-default">
+        <div class="panel-heading">查询结果:{$tips}</div>
+        <div class="panel-body">
+          <ul class="list-group">
+            <volist name="result['go']" id="rs">
+              <li class="list-group-item">{$rs.year}-{$rs.date} {$rs.price}元</li>
+            </volist>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">功能介绍</h3>
+      </div>
+      <div class="panel-body">
+        <ol>
+          <li>提交指定航线的机票价格日历(近一个月) Json格式</li>
+          <li>如果城市不存在,则返回'找不到!'</li>
+          <li>API调用方式:<span>
+            <php>echo "http://".I('server.SERVER_NAME').explode('?',I('server.REQUEST_URI'))[0];</php>?qq=你的QQ号&from=起始城市&to=目的城市</span>
+            <small>(示例见提交后的url)</small>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<include file="./Public/Tpl/footer.html"/>
+</body>
+</html>
