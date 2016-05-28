@@ -33,7 +33,7 @@ class InfoController extends Controller
             $scuec->run();
             $content = $scuec->getContent();
             if ($content["code"] != 200) {
-                $this->showapi(array('code'=>400,'result'=>''));
+                $this->showapi(array('code' => 400, 'result' => ''));
                 exit(0);
             }
             $res = Array();
@@ -45,7 +45,7 @@ class InfoController extends Controller
                 if ($key % 10 == 0) {
                     $item++;
                 }
-                $classinfo[$item][$key % 10] = str_replace('<br/>',' ',$value);
+                $classinfo[$item][$key % 10] = str_replace('<br/>', ' ', $value);
             }
             //如果type=1,则分开上课时间字符串
             if (isset($_POST['type']) && $_POST['type'] == 1) {
@@ -55,7 +55,7 @@ class InfoController extends Controller
                     $classinfo[$key][5] = $ch;
                 }
             }
-            $this->showapi(array('code'=>200,'result'=>$classinfo));
+            $this->showapi(array('code' => 200, 'result' => $classinfo));
         } else {
             $this->display();
         }
@@ -77,16 +77,37 @@ class InfoController extends Controller
             }
             $res = Array();
             preg_match_all('/<table.*?>(.*?)<\/table>/s', $content['content'], $res);
-            preg_match_all('/<td.*?>(.*?)<\/td>/s', $res[0][1], $res);
-            $examinfo = array(0 => array('序号', '课程号', '课程名称', '课程性质', '任课老师', '学分', '座位号', '考试时间', '考试地点', '考试形式', '考试方式', '状态'));
+            preg_match_all('/<td.*?>(.*?)<\/td>/s', $res[0][1], $res1);
+            preg_match_all('/<td.*?>(.*?)<\/td>/s', $res[0][2], $res2);
+            preg_match_all('/<td.*?>(.*?)<\/td>/s', $res[0][3], $res3);
+            $examArranged = array(0 => array('序号', '课程号', '课程名称', '课程性质', '任课老师', '学分', '座位号', '考试时间', '考试地点', '考试形式', '考试方式', '状态'));
             $item = 0;
-            foreach ($res[1] as $key => $value) {
+            foreach ($res1[1] as $key => $value) {
                 if ($key % 12 == 0) {
                     $item++;
                 }
-                $examinfo[$item][$key % 12] = preg_replace('/<\/*span.*>/s', '', $value);
+                $examArranged[$item][$key % 12] = preg_replace('/<\/*span.*>/s', '', $value);
             }
-            $this->showapi(array('code'=>200,'result'=>$examinfo));
+
+            $examArranging = array(0 => array('序号', '课程号', '课程名称', '课程性质', '任课老师', '学分', '考试时间地点'));
+            $item = 0;
+            foreach ($res2[1] as $key => $value) {
+                if ($key % 7 == 0) {
+                    $item++;
+                }
+                $examArranging[$item][$key % 7] = preg_replace('/<\/*span.*>/s', '', $value);
+            }
+
+            $examUnArranged = array(0 => array('序号', '课程号', '课程名称', '学分', '考试时间地点'));
+            $item = 0;
+            foreach ($res3[1] as $key => $value) {
+                if ($key % 5 == 0) {
+                    $item++;
+                }
+                $examUnArranged[$item][$key % 5] = preg_replace('/<\/*span.*>/s', '', $value);
+            }
+            $examInfo = array('arranged' => $examArranged, 'arranging' => $examArranging, 'unarranged' => $examUnArranged);
+            $this->ajaxReturn(array('code' => 200, 'result' => $examInfo),'json');
         } else {
             $this->display();
         }
@@ -145,7 +166,7 @@ class InfoController extends Controller
                 $score[$k][$i] = $value;
                 $i++;
             }
-            $this->showapi(array('code'=>200,'result'=>$score));
+            $this->showapi(array('code' => 200, 'result' => $score));
         } else {
             $this->display();
         }
@@ -186,42 +207,43 @@ class InfoController extends Controller
                 $score[$k][$i] = $value;
                 $i++;
             }
-            $this->showapi(array('code'=>200,'result'=>$score));
+            $this->showapi(array('code' => 200, 'result' => $score));
         } else {
             $this->display();
         }
     }
 
-    public function physics(){
+    public function physics()
+    {
         $student = I('post.student', '');
         $password = I('post.password', '');
         if ($student != '' && $password != '') {
             $url = 'http://labsystem.scuec.edu.cn/login.php';
             $targeturl = 'http://labsystem.scuec.edu.cn/labcoursearrange2_student.php';
-            $data = array('myid'=>$student,'mypasswd'=>$password,'mytype'=>'student');
+            $data = array('myid' => $student, 'mypasswd' => $password, 'mytype' => 'student');
             import("ORG.Curl.Curl");
             $curl = new \Org\Curl\Curl();
-            $cookieFile = './App/Runtime/Temp/cookie-'.$student.'.temp';
+            $cookieFile = './App/Runtime/Temp/cookie-' . $student . '.temp';
             $curl->setCookieJar($cookieFile);
             $curl->setCookieFile($cookieFile);
-            $curl->post($url,$data);
-            $content = iconv('GB2312','UTF-8//IGNORE',$curl->get($targeturl,array('labcourse'=>'DXXY-387')));
-            if(strpos($content,"您无权访问此页面")!==false){
-                $this->ajaxReturn(array('code'=>400,'msg'=>'信息有误,或权限不足,请检查核对后重试'));
+            $curl->post($url, $data);
+            $content = iconv('GB2312', 'UTF-8//IGNORE', $curl->get($targeturl, array('labcourse' => 'DXXY-387')));
+            if (strpos($content, "您无权访问此页面") !== false) {
+                $this->ajaxReturn(array('code' => 400, 'msg' => '信息有误,或权限不足,请检查核对后重试'));
             }
-            if(file_exists($cookieFile)){
+            if (file_exists($cookieFile)) {
                 @unlink($cookieFile);
             }
             $pattern = '/<tr bgcolor=.*?>(.*?)<\/tr>/s';
-            preg_match_all($pattern,$content,$matchlist);
+            preg_match_all($pattern, $content, $matchlist);
             $matchlist = $matchlist[1];
             $resultArr = array();
             $pattern = '/<td.*?>(.*?)<\/td>/s';
             foreach ($matchlist as $k => $v) {
-                if(strpos($v,'&nbsp;')==false){
-                    preg_match_all($pattern,$v,$mch);
-                    foreach($mch[1] as $mk=>$mv){
-                        if(strpos($mv,"必做")!==false || strpos($mv,"选做")!==false || strpos($mv,'<input')!==false) {
+                if (strpos($v, '&nbsp;') == false) {
+                    preg_match_all($pattern, $v, $mch);
+                    foreach ($mch[1] as $mk => $mv) {
+                        if (strpos($mv, "必做") !== false || strpos($mv, "选做") !== false || strpos($mv, '<input') !== false) {
                             unset($mch[1][$mk]);
                         }
                     }
@@ -230,7 +252,7 @@ class InfoController extends Controller
                 }
             }
 //            $this->showapi($resultArr);
-            $this->ajaxReturn(array('code'=>200,'result'=>$resultArr),'json');
+            $this->ajaxReturn(array('code' => 200, 'result' => $resultArr), 'json');
         } else {
             $this->display();
         }
