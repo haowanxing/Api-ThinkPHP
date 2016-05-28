@@ -5,6 +5,17 @@ use Think\Controller;
 
 class InfoController extends Controller
 {
+    private $year;
+    private $month;
+    private $day;
+    public function __construct()
+    {
+        parent::__construct();
+        $this->year = date('Y');
+        $this->month = date('m');
+        $this->day = date('d');
+    }
+
     public function index()
     {
         $urls = array(u('score'), u('schedule'), u('exam'), u('sociascore'));
@@ -55,7 +66,23 @@ class InfoController extends Controller
                     $classinfo[$key][5] = $ch;
                 }
             }
-            $this->showapi(array('code' => 200, 'result' => $classinfo));
+            $content = array('code' => 200, 'result' => $classinfo);
+            $result = "";
+            switch(I('get.type')){
+                case "weixin":
+                    foreach ($content['result'] as $item) {
+                        $result .= $item[2] . " \n" . $item[5] . ' ' . $item[6] . " \n" . $item[7] . ' ' . $item[8] . " \n";
+                        $result .= "=================== \n";
+                    }
+                    echo $result;
+                    break;
+                case "weibo":
+                    echo $result;
+                    break;
+                default:
+                    $this->ajaxReturn($content,'json');
+                    break;
+            }
         } else {
             $this->display();
         }
@@ -107,7 +134,47 @@ class InfoController extends Controller
                 $examUnArranged[$item][$key % 5] = preg_replace('/<\/*span.*>/s', '', $value);
             }
             $examInfo = array('arranged' => $examArranged, 'arranging' => $examArranging, 'unarranged' => $examUnArranged);
-            $this->ajaxReturn(array('code' => 200, 'result' => $examInfo),'json');
+            $content = array('code' => 200, 'result' => $examInfo);
+            $result = "";
+            switch(I('get.type')){
+                case "weixin":
+                    if (count($content['result']['arranged']) > 1) {
+                        $result .= "---已安排考试课程---\n";
+                        foreach ($content['result']['arranged'] as $key => $item) {
+                            if ($key == 0)
+                                continue;
+                            if ($item[11] == "已结束") {
+                                $result .= $item[0] . "-[" . $item[4] . "]" . $item[2] . ", 时间:" . substr($item[7],5) . "(已结束)\n";
+                            } else {
+                                $result .= $item[0] . "-[" . $item[4] . "]" . $item[2] . ", 时间:" . substr($item[7],5) . ", 考场:" . $item[8] . ", 座次:" . $item[6] . "\n";
+                            }
+                        }
+                    }
+                    if (count($content['result']['arranging']) > 1) {
+                        $result .= "---正在安排---\n";
+                        foreach ($content['result']['arranging'] as $key => $item) {
+                            if ($key == 0)
+                                continue;
+                            $result .= $item[0] . "-(" . $item[3] . ")" . $item[2] . "-[" . $item[4] . "]\n";
+                        }
+                    }
+                    if (count($content['result']['unarranged']) > 1) {
+                        $result .= "---未安排---\n";
+                        foreach ($content['result']['unarranged'] as $key => $item) {
+                            if ($key == 0)
+                                continue;
+                            $result .= $item[0] . $item[2] . ", 学分:" . $item[3] . "\n";
+                        }
+                    }
+                    echo $result;
+                    break;
+                case "weibo":
+                    echo $result;
+                    break;
+                default:
+                    $this->ajaxReturn($content,'json');
+                    break;
+            }
         } else {
             $this->display();
         }
@@ -128,13 +195,6 @@ class InfoController extends Controller
             } else {
                 $string = $string["content"];
             }
-//            $score_cache = __APP__.'/Temp/score_cache/'.$student.'.html';
-//            if(!file_exists($score_cache) || (filemtime($score_cache)-time())>86400){
-//                $file = fopen($score_cache,"w");
-//                fwrite($file,$string);
-//                fclose($file);
-//            }
-//            $score[0]['cache'] = dirname('http://'.$_SERVER['SERVER_NAME'].$_SERVER["REQUEST_URI"])."/".$score_cache;
             preg_match('/<!-- 查询结束 -->(.*?)<!-- 原始成绩 -->/s', $string, $result);
             preg_match_all('/<td align="center" valign="middle">(.*?)<\/td>/s', $result[0], $result);
             $tr = array("序号", "学年学期", "课程号", "课程名称", "课程类别", "课程性质", "学分", "成绩", "修读方式", "备注");
@@ -166,7 +226,38 @@ class InfoController extends Controller
                 $score[$k][$i] = $value;
                 $i++;
             }
-            $this->showapi(array('code' => 200, 'result' => $score));
+            $content = array('code' => 200, 'result' => $score);
+            $result = "";
+            switch(I('get.type')){
+                case "weixin":
+                    if ($this->month >= 3 && $this->month <= 8) {
+                        $xueqi = ($this->year - 1) . '-' . ($this->year) . '学年第二学期';
+                    } elseif ($this->month <= 2) {
+                        $xueqi = ($this->year - 1) . '-' . ($this->year) . '学年第一学期';
+                    } else {
+                        $xueqi = ($this->year) . '-' . ($this->year + 1) . '学年第一学期';
+                    }
+                    $arrtag = 1;
+                    foreach ($content['result'] as $item) {
+                        if ($arrtag > 16)
+                            break;
+                        if (strpos($item[1], $xueqi) !== false) {
+                            $result .= $item[3] . "(" . $item[4] . ")\n分数:" . $item[7] . " \n";
+                            $result .= "=================== \n";
+                            $arrtag++;
+                        }
+                    }
+                    if ($arrtag == 1)
+                        $result = "本学期还没有成绩出来呢!";
+                    echo $result;
+                    break;
+                case "weibo":
+                    echo $result;
+                    break;
+                default:
+                    $this->ajaxReturn($content,'json');
+                    break;
+            }
         } else {
             $this->display();
         }
@@ -207,7 +298,24 @@ class InfoController extends Controller
                 $score[$k][$i] = $value;
                 $i++;
             }
-            $this->showapi(array('code' => 200, 'result' => $score));
+            $content = array('code' => 200, 'result' => $score);
+            $result = "";
+            switch(I('get.type')){
+                case "weixin":
+                    foreach ($content['result'] as $key => $item) {
+                        if ($key == 0) continue;
+                        $result .= "学期:" . $item[0] . "\n批次:" . $item[1] . "\n项目:" . $item[2] . "\n考号:" . $item[3] . "总成绩:" . $item[4] . "\n报名日期:" . $item[5] . "\n考试日期:" . $item[6] . "\n";
+                        $result .= "=================== \n";
+                    }
+                    echo $result;
+                    break;
+                case "weibo":
+                    echo $result;
+                    break;
+                default:
+                    $this->ajaxReturn($content,'json');
+                    break;
+            }
         } else {
             $this->display();
         }
