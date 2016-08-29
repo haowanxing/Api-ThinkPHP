@@ -243,11 +243,12 @@ class IndexController extends Controller
                 $text = I('post.text')?I('post.text'):'该证件仅用于某某认证';
                 $color = I('post.color')?I('post.color'):'#888888';
                 $fontsize = I('post.fontsize')?I('post.fontsize'):20;
+                $font = THINK_PATH.'Library/Think/Verify/zhttfs/2.ttf';
                 $image = new \Think\Image();
                 $fileDriver = new \Think\Storage\Driver\File();
-                $image->open($uploadFilePath)->thumb(560, 390,\Think\Image::IMAGE_THUMB_FILLED)->text($text,'./ThinkPHP/Library/Think/Verify/zhttfs/2.ttf',$fontsize,$color,\Think\Image::IMAGE_WATER_CENTER,0,25)->save($uploadFilePath);
-                $image->open($uploadFilePath)->text($text,'./ThinkPHP/Library/Think/Verify/zhttfs/2.ttf',$fontsize,$color,\Think\Image::IMAGE_WATER_CENTER,100,25)->save($uploadFilePath);
-                $image->open($uploadFilePath)->text($text,'./ThinkPHP/Library/Think/Verify/zhttfs/2.ttf',$fontsize,$color,\Think\Image::IMAGE_WATER_CENTER,-100,25)->save($uploadFilePath);
+                $image->open($uploadFilePath)->thumb(560, 390,\Think\Image::IMAGE_THUMB_FILLED)->text($text,$font,$fontsize,$color,\Think\Image::IMAGE_WATER_CENTER,0,25)->save($uploadFilePath);
+                $image->open($uploadFilePath)->text($text,$font,$fontsize,$color,\Think\Image::IMAGE_WATER_CENTER,100,25)->save($uploadFilePath);
+                $image->open($uploadFilePath)->text($text,$font,$fontsize,$color,\Think\Image::IMAGE_WATER_CENTER,-100,25)->save($uploadFilePath);
                 $imgtext = base64_encode($fileDriver->read($uploadFilePath));
                 $fileDriver->unlink($uploadFilePath);
             }
