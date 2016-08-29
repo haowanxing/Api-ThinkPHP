@@ -44,6 +44,12 @@
                 <td><a style="display:block;" href="<?php echo u('Scuec/Info/exam'); ?>">考试安排</a></td>
                 <td><a style="display:block;" href="<?php echo u('Scuec/Info/sociascore'); ?>">社考成绩</a></td>
               </tr>
+              <tr>
+                <td><a style="display:block;" href="<?php echo u('Scuec/Info/physics'); ?>">大物实验</a></td>
+                <td><a style="display:block;" href="#"></a></td>
+                <td><a style="display:block;" href="#"></a></td>
+                <td><a style="display:block;" href="#"></a></td>
+              </tr>
               <!--<li role="separator" class="divider"></li>-->
               <tr>
                 <td colspan="4" class="disabled">便民工具</td>
@@ -56,8 +62,8 @@
               </tr>
               <tr>
                 <td><a style="display:block;" href="<?php echo u('Home/index/short_url'); ?>">新浪短链接</a></td>
-                <td><a style="display:block;" href="#"></a></td>
-                <td><a style="display:block;" href="#"></a></td>
+                <td><a style="display:block;" href="<?php echo u('Home/index/cheapFlight'); ?>">低价机票</a></td>
+                <td><a style="display:block;" href="<?php echo u('Home/index/flightCalendar'); ?>">机票日历</a></td>
                 <td><a style="display:block;" href="#"></a></td>
               </tr>
             </table>
