@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <include file="./Public/Tpl/head.html" title="双色球机选" description="模拟双色球机选功能" keywords="福利彩票,双色球,机选,娱乐,随机"/>
+</head>
+<body>
+<include file="./Public/Tpl/nav.html"/>
+<div class="container">
+  <h3>双色球机选API</h3>
+  <div class="row">
+    <form id="fm">
+      <input type="hidden" name="type" value="ssq"/>
+      <div class="col-md-5">
+        <div class="form-group">
+          <label for="tfrom">红球个数（默认6个）:</label>
+          <input name="red" id="tfrom" class="form-control" type="number" placeholder="6"/><br>
+        </div>
+        <div class="form-group">
+          <label for="tto">蓝球个数（默认1个:</label>
+          <input name="blue" id="tto" class="form-control" type="number" placeholder="1"/><br>
+        </div>
+        <button id="do" type="button" class="btn btn-default">提交</button>
+      </div>
+    </form>
+    <div class="col-md-offset-0 col-md-2"></div>
+    <div class="col-md-5">
+      <div class="panel panel-default">
+        <div class="panel-heading">查询结果:</div>
+        <div class="panel-body">
+          <ul class="list-group">
+            <li id="red_ball" class="list-group-item" style="color:red;"></li>
+            <li id="blue_ball" class="list-group-item" style="color:blue"></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">功能介绍</h3>
+      </div>
+      <div class="panel-body">
+        <ol>
+          <li>提交需要的球的个数，返回机选结果 Json格式</li>
+          <li>完全随机不带任何权重</li>
+          <li>API调用方式:<span>
+            <php>echo "http://".I('server.SERVER_NAME').explode('?',I('server.REQUEST_URI'))[0];</php>?type=ssq&red=红球个数&blue=蓝球个数</span>
+            <small>(示例见提交后的url)</small>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<include file="./Public/Tpl/footer.html"/>
+<script>
+  $(document).ready(function () {
+      $("body").on('click','#do',function () {
+         $.ajax({
+             url:"{:U('Lottery/rangeouter')}",
+             type:"POST",
+             data:$("#fm").serialize(),
+             dataType:"json",
+             success:function(rs){
+                 if(rs.code==200){
+                     $("#red_ball").html(rs.data.red.join(','))
+                     $("#blue_ball").html(rs.data.blue.join(','))
+                 }else{
+                     console.log(rs);
+                 }
+             }
+         }) ;
+      });
+      $("#do").trigger("click");
+  });
+</script>
+</body>
+</html>
