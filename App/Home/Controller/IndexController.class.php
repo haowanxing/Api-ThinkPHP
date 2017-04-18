@@ -256,4 +256,43 @@ class IndexController extends Controller
         $this->assign('pic',$imgtext);
         $this->display();
     }
+
+    public function daypay(){
+        $work_day = I("work_day",21.75,'float');
+        $real_work_day = I("real_work_day",21.75,'float');
+        $lunch_pay_per_day = I("lunch_pay_per_day",10,'float');
+        $phone_pay_per_month = I("phone_pay_per_month",100,'float');
+        $trafic_pay_per_month = I("trafic_pay_per_month",100,'float');
+        $day_pay = I("day_pay",150,'float');
+
+        $base_salary = $day_pay*$real_work_day;
+        $lunch_salary = $lunch_pay_per_day*$real_work_day;
+        $phone_salary = $phone_pay_per_month*$real_work_day/$work_day;
+        $trafic_salary = $trafic_pay_per_month*$real_work_day/$work_day;
+
+        $total = $base_salary+$lunch_salary+$phone_salary+$trafic_salary;
+
+        $data=array(
+            'work_day'=>$work_day,
+            'real_work_day'=>$real_work_day,
+            'lunch_pay_per_day'=>$lunch_pay_per_day,
+            'phone_pay_per_month'=>$phone_pay_per_month,
+            'trafic_pay_per_month'=>$trafic_pay_per_month,
+            'day_pay'=>$day_pay,
+            'base_salary'=>$base_salary,
+            'lunch_salary'=>$lunch_salary,
+            'phone_salary'=>$phone_salary,
+            'trafic_salary'=>$trafic_salary,
+            'total'=>$total
+        );
+
+        if(IS_GET){
+            $this->assign('result',$data);
+            $this->display();
+        }else{
+            if($work_day<$real_work_day)
+                $this->ajaxReturn(result(400,'实际工作天数不能大于当月所需工作天数'));
+            $this->ajaxReturn(result(200,'ok',$data));
+        }
+    }
 }

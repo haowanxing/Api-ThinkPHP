@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <include file="./Public/Tpl/head.html" title="日薪月付计算小工具" description="实习生工作按日计薪水，支持餐补、通信和交通补贴" keywords="实习生,薪水,日薪月付,API,Fantwo"/>
+</head>
+<body>
+<include file="./Public/Tpl/nav.html"/>
+<div class="container">
+  <h3>日薪月付明明白白^_-</h3>
+  <div class="row">
+    <form method="get" action="" name="daypay_form">
+      <input type="hidden" name="type" id="hidden_type" value="1"/>
+      <div class="col-md-5">
+        <div class="form-group">
+          <label for="work_day">当月所需工作天数:</label>
+          <input name="work_day" id="work_day" class="form-control" type="number" placeholder="21.5天"/><br>
+        </div>
+        <div class="form-group">
+          <label for="real_work_day">当月实际工作天数:</label>
+          <input name="real_work_day" id="real_work_day" class="form-control" type="number" placeholder="21.5天"/><br>
+        </div>
+        <div class="form-group">
+          <label for="day_pay">基本日薪:</label>
+          <input name="day_pay" id="day_pay" class="form-control" type="number" placeholder="150元"/><br>
+        </div>
+        <div class="form-group">
+          <label for="lunch_pay_per_day">每天的工作餐补:</label>
+          <input name="lunch_pay_per_day" id="lunch_pay_per_day" class="form-control" type="number" placeholder="10元"/><br>
+        </div>
+        <div class="form-group">
+          <label for="phone_pay_per_month">月通信补贴:</label>
+          <input name="phone_pay_per_month" id="phone_pay_per_month" class="form-control" type="number" placeholder="100元"/><br>
+        </div>
+        <div class="form-group">
+          <label for="trafic_pay_per_month">月交通补贴:</label>
+          <input name="trafic_pay_per_month" id="trafic_pay_per_month" class="form-control" type="number" placeholder="100元"/><br>
+        </div>
+        <div class="form-group">
+          <button id="produce" class="btn btn-primary" type="submit">开始云计算...</button>
+        </div>
+      </div>
+    </form>
+    <div class="col-md-offset-0 col-md-2"></div>
+    <div class="col-md-5">
+      <div class="panel panel-default">
+        <div class="panel-heading">计算结果：</div>
+        <div class="panel-body">
+          <table class="table table-bordered">
+          <tr><th>#</th><th>数值</th></tr>
+          <tr><td>实际工作天数/工作日:</td><td>{$result['real_work_day']}天/{$result['work_day']}天</td></tr>
+          <tr><td>每日餐补:</td><td>{$result['lunch_pay_per_day']}元</td></tr>
+          <tr><td>通信月补助:</td><td>{$result['phone_pay_per_month']}元</td></tr>
+          <tr><td>交通月补助:</td><td>{$result['trafic_pay_per_month']}元</td></tr>
+          <tr><td>基本日薪:</td><td>{$result['day_pay']}元</td></tr>
+          <tr><td>应发基础月薪:</td><td>{$result['base_salary']}元</td></tr>
+          <tr><td>应发月餐补:</td><td>{$result['lunch_salary']}元</td></tr>
+          <tr><td>应发月通信补:</td><td>{$result['phone_salary']}元</td></tr>
+          <tr><td>应发月交通补:</td><td>{$result['trafic_salary']}元</td></tr>
+          <tr><td style="color: red;">应发总计:</td><td>{$result['total']}元</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">功能介绍</h3>
+      </div>
+      <div class="panel-body">
+        <ol>
+          <li>不做多少介绍了，都能看懂吧，单独请求接口使用post请求即可返回JSON数据</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<include file="./Public/Tpl/footer.html"/>
+<script type="text/javascript">
+</script>
+</body>
+</html>
