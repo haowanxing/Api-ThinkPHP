@@ -4,7 +4,7 @@
   <include file="./Public/Tpl/head.html" title="二维码生成" description="将指定文字内容(代码)生成对应的二维码图片(可以右键另存为),可根据需要选择二维码的大小和纠错级" keywords="二维码,制作,生成,API,Fantwo"/>
   <script>
     function gen() {
-      document.getElementById('show').src = "<php>echo I('server.SERVER_NAME');</php>/qrcode/get.php?data=" + document.getElementById('tword').value + "&size=" + document.getElementById('tsize').value + "&level=" + document.getElementById('tlevel').value;
+      document.getElementById('show').src = "http://<php>echo I('server.SERVER_NAME');</php>/qrcode/get.php?data=" + document.getElementById('tword').value + "&size=" + document.getElementById('tsize').value + "&level=" + document.getElementById('tlevel').value;
     }
   </script>
 </head>
