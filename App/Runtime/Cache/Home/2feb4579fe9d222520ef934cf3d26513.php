@@ -1,1 +1,0 @@
-<?php if (!defined('THINK_PATH')) exit();?>{error:QQ号不合法!}
