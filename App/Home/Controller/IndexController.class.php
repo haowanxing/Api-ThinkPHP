@@ -18,6 +18,10 @@ class IndexController extends Controller
 //        }
     }
 
+    public function phpinfo(){
+        echo phpinfo();
+    }
+
     public function verifycode()
     {
         $Verify = new \Think\Verify();
