@@ -164,7 +164,7 @@ class IndexController extends Controller
 //                $this->assign("result", $response['urls']);
             }
         } else {
-            $this->assign("tips", "不符合规则,请求出错");
+            $this->assign("tips", "不符合规则,请求出错,{$content}");
         }
         $this->display();
     }
