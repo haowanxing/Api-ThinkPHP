@@ -8,7 +8,7 @@ class IndexController extends Controller
 {
     public function index()
     {
-        header("Location:http://www.fantwo.com/api-list.html");
+        header("Location:/index.php/Home/index/qrcode.html");
 //        $this->error("现在返回");
 //        $this->show("hello world");
 //        $this->assign("img",u('index/verifycode'));
