@@ -152,7 +152,7 @@ class IndexController extends Controller
             if (I("post.type") == "2")
                 $requesturl .= "http://t.cn/RGCemd0";
         }
-        $content = file_get_contents($requesturl);echo $requesturl."\n".$content;
+        $content = file_get_content($requesturl);
         $response = json_decode($content, true);
         if (!empty($response)) {
             if (I('get.qq'))
