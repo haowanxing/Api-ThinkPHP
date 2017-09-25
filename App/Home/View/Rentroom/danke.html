@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <include file="./Public/Tpl/head.html" title="蛋壳筛房" description="模拟蛋壳公寓房间筛选" keywords="租房,蛋壳公寓,模拟筛选"/>
+</head>
+<body>
+<include file="./Public/Tpl/nav.html"/>
+<div class="container" id="danke">
+  <h3>蛋壳公寓房源筛选</h3>
+  <div class="row">
+    <div class="col-md-2">
+      <div class="form-group">
+        <label for="price">价格</label>
+        <select class="form-control" id="price" v-model="params.price">
+          <option value="">不限</option>
+          <option value="0-2000">2000以下</option>
+          <option value="2000-2500">2000-2500</option>
+          <option value="2500-3000">2500-3000</option>
+          <option value="3000-3500">3000-3500</option>
+          <option value="3500-4000">3500-4000</option>
+          <option value="3000-4500">3000-4500</option>
+          <option value="4500-5000">4500-5000</option>
+          <option value="5000">5000以上</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="form-group">
+        <label for="bedroomNum">居室</label>
+        <select class="form-control" id="bedroomNum" v-model="params.bedroomNum">
+          <option value="">不限</option>
+          <option value="1">1居</option>
+          <option value="2">2居</option>
+          <option value="3">3居</option>
+          <option value="4">4居及以上</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="form-group">
+        <label for="area">主次卧</label>
+        <select class="form-control" id="area" v-model="params.area">
+          <option value="">不限</option>
+          <option value="12">主卧</option>
+          <option value="11">次卧</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="form-group">
+        <label for="faceTo">朝向</label>
+        <select class="form-control" id="faceTo" v-model="params.faceTo">
+          <option value="">不限</option>
+          <option value="东">东</option>
+          <option value="南">南</option>
+          <option value="西">西</option>
+          <option value="北">北</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="form-group">
+        <label for="rentType">类型</label>
+        <select class="form-control" id="rentType" v-model="params.rentType">
+          <option value="">不限</option>
+          <option value="整租">整租</option>
+          <option value="合租">合租</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="checkbox">
+        <label class="checkbox-inline">
+          <input type="checkbox" value="有" v-model="params.hasToilet">独立卫生间
+        </label>
+        <label class="checkbox-inline">
+          <input type="checkbox" value="有" v-model="params.hasBalcony">独立阳台
+        </label>
+        <label class="checkbox-inline">
+          <input type="checkbox" value="有" v-model="params.hasShower">独立卫浴
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <a href="#" class="btn btn-success" @click="search">选好了！</a>
+    </div>
+  </div>
+  <hr>
+  <div class="row" v-show="rooms.length==0" v-html="listTips"></div>
+  <div class="row">
+    <div v-for="room in rooms" class="col-md-4">
+      <div class="thumbnail" :title="room.addressText">
+        <img :src="room.image" alt="..." style="cursor: pointer" @click="jump(room)">
+        <div class="caption">
+          <h4 style="font-size: 18px;overflow: hidden; text-overflow:ellipsis; white-space: nowrap;">
+            <span v-if="room.isOverallRent" class="glyphicon glyphicon-home" aria-hidden="true"></span>
+            <span v-else class="glyphicon glyphicon-user" aria-hidden="true"></span>
+            <span>{{room.addressText}}</span>
+          </h4>
+          <p><span v-html="room.station"></span><em style="float:right;color: #f30;"><strong style="font-size: 1.25em;" v-html="room.price">0</strong>元&#47;月</em></p>
+          <p><a href="#"@click="jump(room)" class="btn btn-primary" role="button">去看看</a> <a href="#" class="btn btn-default" role="button">不喜欢</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" v-show="rooms.length">
+    <p v-html="loadTips"></p>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">功能介绍</h3>
+      </div>
+      <div class="panel-body">
+        <ol>
+          <li>提交需要的球的个数，返回机选结果 Json格式</li>
+          <li>完全随机不带任何权重</li>
+          <li>API调用方式:<span>
+            <php>echo "http://".I('server.SERVER_NAME').explode('?',I('server.REQUEST_URI'))[0];</php>?type=ssq&red=红球个数&blue=蓝球个数</span>
+            <small>(示例见提交后的url)</small>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<include file="./Public/Tpl/footer.html"/>
+<script>
+    var parameters = {
+        _token: "_token:foWe8Bva4P6AOaQbVKlJFW08z6Pi9WjPmejbY1p4",
+        page: 1,
+        size: 10,
+        price: "",
+        bedroomNum: "",
+        rentType: "",
+        area: "",
+        faceTo: "",
+        hasToilet: "",
+        hasBalcony: "",
+        hasShower: "",
+        xiaoquId: "",
+        left_bottom_lng: "",
+        left_bottom_lat: "",
+        right_top_lng: "",
+        right_top_lat: ""
+    };
+    var app = new Vue({
+        el: '#danke',
+        data: {
+            layui:{},
+            params: parameters,
+            rooms:[
+            ],
+            loadTips:'下拉继续加载...',
+            isLoading:false,
+            listTips:'正在疯狂加载中'
+        },
+        mounted:function(){
+            var _this = this;
+
+            layui.use(['layer', 'form'], function(){
+                _this.layui.layer = layui.layer;
+                _this.request();
+            });
+        },
+        methods:{
+            alert:function(msg){
+                alert(msg);
+            },
+            search:function(){
+              var _this = this;
+                _this.params.page = 1;
+                _this.params.size = 10;
+              _this.request();
+            },
+            request:function (p) {
+                var _this = this;
+                var pm = $.extend(_this.params,p);
+                var i = _this.layui.layer.msg("",{type:3,time:10000});
+                _this.isLoading = true;
+                $.ajax({
+                    url:"{:U('Rentroom/dankeouter')}",
+                    type:"GET",
+                    data:pm,
+                    dataType:"json",
+                    success:function(rs){
+                        _this.layui.layer.close(i);
+                        if(rs.code==200){
+                            var danke = rs.data;
+                            if(danke.data.roomList.length > 0){
+                                _this.loadTips = "木有数据。。";
+                            }
+                            _this.rooms = danke.data.roomList;
+                        }else{
+                            console.log(rs);
+                        }
+                        _this.isLoading = false;
+                    }
+                });
+            },
+            jump:function(room){
+                var _this = this;
+                var room_id = room.id;
+                var url = "http://www.dankegongyu.com/room/"+room_id+".html";
+                window.open(url);
+            },
+            loadmore:function(){
+                var _this = this;
+                if(_this.loadTips=="没有更多了...") return 0;
+                _this.loadTips = "正在加载数据...";
+                _this.params.page++;
+                var i = _this.layui.layer.msg("",{type:3,time:10000});
+                _this.isLoading = true;
+                $.ajax({
+                    url:"{:U('Rentroom/dankeouter')}",
+                    type:"GET",
+                    data:_this.params,
+                    dataType:"json",
+                    success:function(rs){
+                        _this.layui.layer.close(i);
+                        if(rs.code==200){
+                            var danke = rs.data;
+                            if(danke.data.page.currentPage==_this.params.page){
+                                _this.rooms.push.apply(_this.rooms,danke.data.roomList);
+                                _this.loadTips = "下拉继续加载...";
+                            }else{
+                                _this.loadTips = "没有更多了...";
+                            }
+                            _this.isLoading = false;
+                        }else{
+                            console.log(rs);
+                        }
+                    }
+                });
+            }
+        }
+    })
+    $(window).scroll(
+        function() {
+            var scrollTop = $(this).scrollTop();
+            var scrollHeight = $(document).height();
+            var windowHeight = $(this).height();
+            if (scrollTop + windowHeight == scrollHeight) {
+                console.log(scrollTop,scrollHeight,windowHeight);
+                app.loadmore();
+            }
+        });
+</script>
+</body>
+</html>
