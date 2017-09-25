@@ -32,9 +32,9 @@ class RentroomController extends Controller{
         $params['rentType'] = I('get.rentType','');
         $params['area'] = I('get.area','');
         $params['faceTo'] = I('get.faceTo','南');
-        $params['hasToilet'] = I('get.hasToilet','');
-        $params['hasBalcony'] = I('get.hasBalcony','');
-        $params['hasShower'] = I('get.hasShower','');
+        $params['hasToilet'] = I('get.hasToilet','')?'有':'';
+        $params['hasBalcony'] = I('get.hasBalcony','')?'有':'';
+        $params['hasShower'] = I('get.hasShower','')?'有':'';
         $params['xiaoquId'] = I('get.xiaoquId','');
         $params['left_bottom_lng'] = I('get.left_bottom_lng','116.431279');
         $params['left_bottom_lat'] = I('get.left_bottom_lat','39.845663');
