@@ -85,8 +85,21 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-5">
+      <form class="form-inline">
+        <div class="form-group">
+          <label class="sr-only" for="keywords">关键词</label>
+          <input type="text" class="form-control" id="keywords" placeholder="关键词..." v-model="geoParams.keywords">
+          <label class="sr-only" for="geoRange">方圆范围</label>
+          <select class="form-control" id="geoRange" disabled title="暂不支持" v-model="geoRange">
+            <option value="0">5公里</option>
+            <option value="1">10公里</option>
+            <option value="2">15公里</option>
+            <option value="3">20公里</option>
+          </select>
+        </div>
       <a href="#" class="btn btn-success" @click="search">选好了！</a>
+      </form>
     </div>
   </div>
   <hr>
@@ -119,21 +132,23 @@
       </div>
       <div class="panel-body">
         <ol>
-          <li>提交需要的球的个数，返回机选结果 Json格式</li>
-          <li>完全随机不带任何权重</li>
-          <li>API调用方式:<span>
+          <li>提交需要筛选的条件，点击选好了</li>
+          <li>默认北京地区，其他地区暂未实现</li>
+          <!--<li>API调用方式:<span>
             <php>echo "http://".I('server.SERVER_NAME').explode('?',I('server.REQUEST_URI'))[0];</php>?type=ssq&red=红球个数&blue=蓝球个数</span>
             <small>(示例见提交后的url)</small>
-          </li>
+          </li>-->
         </ol>
       </div>
     </div>
   </div>
 </div>
+<input type="hidden" name="" id="_token" value="{$token}">
 <include file="./Public/Tpl/footer.html"/>
 <script>
+  var _token = $("#_token").val();
     var parameters = {
-        _token: "_token:foWe8Bva4P6AOaQbVKlJFW08z6Pi9WjPmejbY1p4",
+        _token: _token,
         page: 1,
         size: 10,
         price: "",
@@ -150,11 +165,25 @@
         right_top_lng: "",
         right_top_lat: ""
     };
+    var geo_params = {
+        _token: _token,
+        keywords:'',
+    };
+    //5公里,10公里,15公里,20公里
+    var geo_ground = [
+        {lng:0.086,lat:0.04},
+        {lng:0.086,lat:0.09},
+        {lng:0.086,lat:0.135},
+        {lng:0.086,lat:0.18}
+    ];
     var app = new Vue({
         el: '#danke',
         data: {
             layui:{},
             params: parameters,
+            geoParams:geo_params,
+            geoRange:0,
+            geoGround:geo_ground,
             rooms:[
             ],
             loadTips:'下拉继续加载...',
@@ -181,9 +210,11 @@
             },
             request:function (p) {
                 var _this = this;
-                var pm = $.extend(_this.params,p);
                 var i = _this.layui.layer.msg("",{type:3,time:10000});
                 _this.isLoading = true;
+                if(_this.geoParams.keywords != '')
+                    _this.geoRequest();
+                var pm = $.extend(_this.params,p);
                 $.ajax({
                     url:"{:U('Rentroom/dankeouter')}",
                     type:"GET",
@@ -201,6 +232,32 @@
                             console.log(rs);
                         }
                         _this.isLoading = false;
+                    }
+                });
+            },
+            geoRequest: function () {
+                var _this = this;
+                $.ajax({
+                    url:"{:U('Rentroom/DankeGeo')}",
+                    type:"GET",
+                    data:_this.geoParams,
+                    dataType:"json",
+                    async:false,
+                    success:function(rs){
+                        if(rs.code==200){
+                            var danke = rs.data;
+                            if(!danke.success){
+                                return _this.layer.msg("查询失败！");
+                            }
+                            var lc = danke.data.location;
+                            var gd = _this.geoGround[_this.geoRange];
+                            _this.params.left_bottom_lng = (lc.lng-gd.lng).toFixed(6);
+                            _this.params.right_top_lng = (lc.lng+gd.lng).toFixed(6);
+                            _this.params.left_bottom_lat = (lc.lat-gd.lat).toFixed(6);
+                            _this.params.right_top_lat = (lc.lat+gd.lat).toFixed(6);
+                        }else{
+                            console.log(rs);
+                        }
                     }
                 });
             },
