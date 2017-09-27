@@ -115,7 +115,7 @@
             <span>{{room.addressText}}</span>
           </h4>
           <p><span v-html="room.station"></span><em style="float:right;color: #f30;"><strong style="font-size: 1.25em;" v-html="room.price">0</strong>元&#47;月</em></p>
-          <p style="margin-bottom: 10px;">特色：<lable v-for="tag in room.tags" class="label label-info" style="margin-right: 3px;">{{tag}}</lable></p>
+          <p style="margin-bottom: 10px;">特色：<label v-for="tag in room.tags" class="label label-info" style="margin-right: 3px;">{{tag}}</label></p>
           <p><a href="#"@click="jump(room)" class="btn btn-primary" role="button">去看看</a> <a href="#" class="btn btn-default" role="button">不喜欢</a></p>
         </div>
       </div>
